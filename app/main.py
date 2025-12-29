@@ -1,8 +1,17 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.models import Trade
 from app.analysis import analyze_trade, generate_insights, calculate_severity
 
 app = FastAPI(title="Trade Autopsy API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/analyze-trade")
 def analyze(trade: Trade):
@@ -16,13 +25,3 @@ def analyze(trade: Trade):
         "insights": insights,
         "severity": severity
     }
-
-
-from fastapi.middleware.cors import CORSMiddleware
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
